@@ -18,6 +18,7 @@ Route::get('/', [ContactController::class, 'index'])->name('contacts.index');
 Route::prefix('contacts')->group(function () {
     // Route::post('/', [ContactController::class, 'store'])->name('contacts.store');
     Route::get('/{id}', [ContactController::class, 'show'])->name('contacts.show');
-    // Route::put('/{id}', [ContactController::class, 'update'])->name('contacts.update');
+    Route::get('/edit/{id}', [ContactController::class, 'edit'])->name('contacts.edit');
+    Route::put('/{contact}', [ContactController::class, 'update'])->name('contact.update');
     Route::delete('/{id}', [ContactController::class, 'destroy'])->name('contacts.delete');
 });
