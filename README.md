@@ -1,66 +1,149 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
 
-## About Laravel
+## Installation
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Clone o projeto:
+```bash
+git clone https://github.com/taylormoreira1/phonebook-app
+```
+Navegue até a pasta do projeto:
+```bash
+cd phonebook-app
+```
+Faça uma cópia de .env.example para .env e altere as credenciais do banco:
+```bash
+cp .env.example .env
+```
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+```bash
+DB_CONNECTION=mysql
+DB_HOST=db
+DB_PORT=3306
+DB_DATABASE=default
+DB_USERNAME=laravel
+DB_PASSWORD=secret
+```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Inicie os contêineres:
+```bash
+docker-compose up -d
+```
+Entre no container:
+```bash
+docker exec -it taylor-app bash
+```
+Execute o comando composer install:
+```bash
+composer install
+```
+Configure a chave do aplicativo:
+```bash
+php artisan key:generate
+```
+Execute as migrations do banco de dados:
+```bash
+php artisan migrate
+```
+Execute os seeders:
+```bash
+php artisan db:seed
+```
+Executar test:
+```bash
+php artisan test 
+```
+## Acesso
+acesse http://localhost:8000/
 
-## Learning Laravel
+## Endpoint da api
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Na raiz do projeto tem uma collection do postman com todos os endpoints da api: phonebook.postman_collection.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 1. Criar contato
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- **Endpoint:** `POST /api/contacts`
+- **URL:** http://127.0.0.1:8000/api/contacts
 
-## Laravel Sponsors
+#### Parâmetros da Solicitação:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+| Parâmetro | Tipo     | Descrição                                     |
+|-----------|----------|-----------------------------------------------|
+| name      | String   | **Obrigatório.** O nome do contato.           |
+| email     | String   | O email do contato.                           |
+| birth     | Date     | A data de nascimento do contato (YYYY-MM-DD). |
+| cpf       | String   | O CPF do contato (apenas dígitos).            |
+| phones    | Array    | **Obrigatório.** Array de telefones do contato. |
 
-### Premium Partners
+#### Exemplo de Corpo da Solicitação:
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+```form-data
+name: User Api
+email: teste@emailapi.com
+birth: 1994-01-31
+cpf: 39954996001
+phones[0][phone]: 91152333
+phones[0][ddd]: 11
+phones[0][type]: Residencial
+phones[1][phone]: 91152325
+phones[1][ddd]: 21
+phones[1][type]: Whatsapp
+```
 
-## Contributing
+### 2. Listar contatos
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- **Endpoint:** `GET /api/contacts`
+- **URL:** http://127.0.0.1:8000/api/contacts
 
-## Code of Conduct
+### 3. Detalhes do contatos
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+- **Endpoint:** `GET /contacts/{id}`
+- **URL:** http://127.0.0.1:8000/api/contacts/{id}
 
-## Security Vulnerabilities
+| Parâmetro | Tipo     | Descrição                                     |
+|-----------|----------|-----------------------------------------------|
+| id        | int      | Obrigatório. O ID do contato a ser buscado.   |
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
-## License
+### 4. Atualizar contato
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- **Endpoint:** `PUT /contacts/{id}`
+- **URL:** http://127.0.0.1:8000/api/contacts/{id}
+
+
+#### Parâmetros da Solicitação:
+
+| Parâmetro | Tipo | Descrição                                      |
+|-----------|------|------------------------------------------------|
+| id        | Int  | **Obrigatório.** O ID do contato a ser atualizado.|
+| name      | String   | O novo nome do contato.                       |
+| email     | String   | O novo email do contato.                      |
+| birth     | Date     | A nova data de nascimento do contato (YYYY-MM-DD). |
+| cpf       | String   | O novo CPF do contato (apenas dígitos).        |
+| phones    | Array    | Array de telefones do contato.                 |
+
+#### Exemplo de Corpo da Solicitação:
+
+```form-data
+name: User Api
+email: teste@emailapi.com
+birth: 1994-01-31
+cpf: 39954996001
+phones[0][phone]: 91152333
+phones[0][ddd]: 11
+phones[0][type]: Residencial
+phones[1][phone]: 91152325
+phones[1][ddd]: 21
+phones[1][type]: Whatsapp
+```
+
+### 5. Detalhes do contatos
+
+- **Endpoint:** `DELETE /contacts/{id}`
+- **URL:** http://127.0.0.1:8000/api/contacts/{id}
+
+| Parâmetro | Tipo     | Descrição                                     |
+|-----------|----------|-----------------------------------------------|
+| id        | int      | Obrigatório. O ID do contato a ser excluído.  |
+
+
+
