@@ -42,17 +42,15 @@ services:
       - redis:/data
 
   db:
-    build:
-      context: ./
-      dockerfile: docker/db/DockerFile
     container_name: taylor-db
-    restart: always
-    environment:
-      - MYSQL_DB=mysqld
-      - MYSQL_USER=mysqld
-      - MYSQL_PASSWORD=mysqld
+    image: mysql:8.0
     ports:
       - "3306:3306"
+    environment:
+      - MYSQL_DATABASE=default
+      - MYSQL_USER=laravel
+      - MYSQL_PASSWORD=secret
+      - MYSQL_ROOT_PASSWORD=secret
     volumes:
       - db:/var/lib/mysql
 
