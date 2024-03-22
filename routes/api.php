@@ -17,9 +17,9 @@ use App\Http\Controllers\Api\ContactController;
 */
 
 Route::prefix('contacts')->group(function () {
-    Route::post('/', [ContactController::class, 'store'])->name('contacts.store');
-    Route::get('/', [ContactController::class, 'index'])->name('contacts.index');
-    Route::get('/{id}', [ContactController::class, 'show'])->name('contacts.show');
-    Route::put('/{id}', [ContactController::class, 'update'])->name('contacts.update');
-    Route::delete('/{id}', [ContactController::class, 'destroy'])->name('contacts.destroy');
+    Route::post('/', [ContactController::class, 'store']);
+    Route::get('/', [ContactController::class, 'index']);
+    Route::get('/{id}', [ContactController::class, 'show']);
+    Route::put('/{id}', [ContactController::class, 'update']);
+    Route::delete('/{id}', [ContactController::class, 'destroy']);
 });
