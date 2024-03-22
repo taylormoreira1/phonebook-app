@@ -1,0 +1,67 @@
+version: "2.20"
+
+services:
+  app:
+    build:
+      context: ./
+      dockerfile: docker/php/DockerFile
+    container_name: taylor-app
+    restart: always
+    working_dir: /var/www/
+    volumes:
+      - ./:/var/www/
+    environment:
+      - COMPOSER_HOME=/composer
+      - COMPOSER_ALLOW_SUPERUSER=1
+      - APP_ENV=local
+      - APP_KEY=base64:V9lMOMKFhL7IdZ9/3KcjtT24SIqRw+Oz7ObmYy9YvJQ=
+    depends_on:
+      - db
+      - redis
+      - mailhog
+
+  nginx:
+    image: nginx:1.25.1-alpine-slim
+    container_name: taylor-nginx
+    restart: always
+    ports:
+      - "8000:80"
+    volumes:
+      - ./:/var/www/
+      - ./docker/nginx:/etc/nginx/conf.d
+
+  redis:
+    build:
+      context: ./
+      dockerfile: docker/redis/DockerFile
+    container_name: taylor-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis:/data
+
+  db:
+    build:
+      context: ./
+      dockerfile: docker/db/DockerFile
+    container_name: taylor-db
+    restart: always
+    environment:
+      - MYSQL_DB=mysqld
+      - MYSQL_USER=mysqld
+      - MYSQL_PASSWORD=mysqld
+    ports:
+      - "3306:3306"
+    volumes:
+      - db:/var/lib/mysql
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: taylor-mailhog
+    ports:
+      - "8025:8025"
+
+volumes:
+  redis:
+  db:
